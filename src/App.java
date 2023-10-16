@@ -18,7 +18,7 @@ public class App {
         for (int i = 0; i < 4; i++) {
             System.out.println();
             for (int j = 0; j < 4; j++) {
-                System.out.print(seznam[i][j] + " ");
+                System.out.print(seznam[i][j] + " \t");
             }
         }
         System.out.println();
@@ -212,7 +212,7 @@ public class App {
                 for (int i = 0; i < 4; i++) {
                     System.out.println();
                     for (int j = 0; j < 4; j++) {
-                        System.out.print(seznam[i][j] + " ");
+                        System.out.print(seznam[i][j] + "\t");
                     }
                 }
                 System.out.println();
