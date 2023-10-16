@@ -216,7 +216,7 @@ public class App {
                     }
                 }
                 System.out.println();
-                System.out.println((razlicen ? "" : "ni spremembe"));
+                System.out.println((razlicen ? "" : "Ni spremembe"));
             }
         }
     }
