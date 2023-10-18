@@ -1,18 +1,37 @@
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 public class App {
     public static void main(String[] args) throws Exception {
         int tempSeznam[][] = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
-        int seznam[][] = {{0,0,0,2}, {0,0,0,4}, {0,0,0,2}, {0,0,0,2}};
-        boolean konec, loop, razlicen;
+        int seznam[][] = {{0,0,0,0}, {0,0,0,0}, {0,0,0,0}, {0,0,0,0}};
+        boolean konec, loop, razlicen, veljavenVnos;
         konec = false;
+        File data = new File("data.txt");
         Scanner vnos = new Scanner(System.in);
         Random rand = new Random();
         int x, y, z, vred;
-        String ukaz;
+        String ukaz = "";
         x = rand.nextInt(4);
         y = rand.nextInt(4);
         vred = 2;
+        seznam[y][x] = vred;
+        loop = true;
+        System.out.println("Zelis naloziti zadnje shranjeno polje? Y/N");
+        veljavenVnos = true;
+        while (veljavenVnos) {
+            ukaz = vnos.nextLine();
+            if (ukaz.equals("y")) {
+            }
+        }
+        while (loop) {
+            x = rand.nextInt(4);
+            y = rand.nextInt(4);
+            if (seznam[y][x] == 0) {
+                loop = false;
+            }
+        }
         seznam[y][x] = vred;
         for (int i = 0; i < 4; i++) {
             System.out.println();
@@ -29,16 +48,13 @@ public class App {
                 vnos.close();
                 konec = true;
             }
-            
             else {
-                
                 loop = true;
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
                         tempSeznam[i][j] = seznam[i][j];
                     }    
                 }
-                
                 if (ukaz.equals("w")) {
                     z = 0;
                     while (z < 3) {
@@ -74,7 +90,6 @@ public class App {
                     }
                     ukaz = "";
                 }
-                
                 if (ukaz.equals("s")) {
                     z = 0;
                     while (z < 3) {
@@ -110,7 +125,6 @@ public class App {
                     }
                     ukaz = "";
                 }
-
                 if (ukaz.equals("a")) {
                     z = 0;
                     while (z < 3) {
@@ -146,7 +160,6 @@ public class App {
                     }
                     ukaz = "";
                 }
-                
                 if (ukaz.equals("d")) {
                     z = 0;
                     while (z < 3) {
@@ -182,7 +195,6 @@ public class App {
                     }
                     ukaz = "";
                 }
-
                 razlicen = false;
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -218,5 +230,11 @@ public class App {
                 System.out.println((razlicen ? "" : "Ni spremembe"));
             }
         }
+        if (data.createNewFile()) {
+            System.out.println("File created: " + data.getName());
+        } else {
+            System.out.println("File already exists.");
+        }
+        System.out.println("Zelis shraniti trenutno polje? (drugace bo shranjeno prazno polje)");
     }
 }
