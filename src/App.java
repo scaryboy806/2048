@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Random;
@@ -13,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 public class App {
     private static String ukaz;
+    private static Boolean paused;
     
     private static final Color COLOR_EMPTY = new Color(204, 192, 179);
     private static final Color COLOR_2 = new Color(238, 228, 218);
@@ -37,6 +40,7 @@ public class App {
         boolean poteka, loop, razlicen, veljavenVnos, random;
         random = false;
         poteka = true;
+        paused = false;
         File data = new File("data.txt");
         Scanner vnos = new Scanner(System.in);
         Random rand = new Random();
@@ -76,7 +80,14 @@ public class App {
 
         JFrame shrani = new JFrame();
         shrani.setTitle("2048");
-        shrani.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        shrani.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        shrani.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.out.println("Waaah");
+                paused = false;
+                shrani.setVisible(false);
+            }
+        });
         shrani.setResizable(false);
         shrani.setSize(400,105);
         
@@ -97,6 +108,7 @@ public class App {
 
         JButton shrPreklic = new JButton("Prekli\u010Di");
         shrPreklic.addActionListener(e -> shrani.dispose());
+        shrPreklic.addActionListener(e -> paused = false);
         shrPreklic.setBounds(300, 35, 80, 20);
 
         shrani.add(shrDa);
@@ -111,6 +123,7 @@ public class App {
         okno.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         okno.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
+                paused = true;
                 shrani.setVisible(true);
             }
         });
@@ -121,6 +134,7 @@ public class App {
         igralnoPolje.setBounds(0, 0, 300, 300);
         igralnoPolje.setLayout(new GridLayout(4, 4, 2, 2));
         okno.add(igralnoPolje);
+        okno.addKeyListener(new MyKeyListener());
 
         JButton gor = new JButton("\u2191");
         gor.setFont(new Font("Arial", Font.BOLD, 20));
@@ -216,76 +230,73 @@ public class App {
         okno.setVisible(true);
         
         while (poteka) {
-            igralnoPolje.removeAll();
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    JLabel celica = new JLabel(String.valueOf(seznam[i][j]));
-                    celica.setVerticalAlignment(JLabel.CENTER);
-                    celica.setHorizontalAlignment(JLabel.CENTER);
-                    
-                    if (seznam[i][j] == 0) {
-                        celica.setForeground(COLOR_VALUE_DARK);
-                        celica.setBackground(COLOR_EMPTY);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 2) {
-                        celica.setForeground(COLOR_VALUE_DARK);
-                        celica.setBackground(COLOR_2);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 4) {
-                        celica.setForeground(COLOR_VALUE_DARK);
-                        celica.setBackground(COLOR_4);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 8) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_8);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 16) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_16);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 32) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_32);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 64) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_64);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 128) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_128);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 256) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_256);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 512) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_512);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 1024) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_1024);
-                        celica.setOpaque(true);
-                    } else if (seznam[i][j] == 2048) {
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_2048);
-                        celica.setOpaque(true);
-                    } else{
-                        celica.setForeground(COLOR_VALUE_LIGHT);
-                        celica.setBackground(COLOR_2048PLUS);
-                        celica.setOpaque(true);
-                    }
+            System.out.println("bro");
+            if (!paused) {
+                igralnoPolje.removeAll();
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        JLabel celica = new JLabel(String.valueOf(seznam[i][j]));
+                        celica.setVerticalAlignment(JLabel.CENTER);
+                        celica.setHorizontalAlignment(JLabel.CENTER);
+                        
+                        if (seznam[i][j] == 0) {
+                            celica.setForeground(COLOR_VALUE_DARK);
+                            celica.setBackground(COLOR_EMPTY);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 2) {
+                            celica.setForeground(COLOR_VALUE_DARK);
+                            celica.setBackground(COLOR_2);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 4) {
+                            celica.setForeground(COLOR_VALUE_DARK);
+                            celica.setBackground(COLOR_4);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 8) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_8);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 16) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_16);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 32) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_32);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 64) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_64);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 128) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_128);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 256) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_256);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 512) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_512);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 1024) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_1024);
+                            celica.setOpaque(true);
+                        } else if (seznam[i][j] == 2048) {
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_2048);
+                            celica.setOpaque(true);
+                        } else{
+                            celica.setForeground(COLOR_VALUE_LIGHT);
+                            celica.setBackground(COLOR_2048PLUS);
+                            celica.setOpaque(true);
+                        }
 
-                    igralnoPolje.add(celica);
+                        igralnoPolje.add(celica);
+                    }
                 }
-            }
-            SwingUtilities.updateComponentTreeUI(okno);
-            
-            if (ukaz.equals("ends") || ukaz.equals("end")) {
-                poteka = false;
-            }
-            else {
+                SwingUtilities.updateComponentTreeUI(okno);
                 loop = true;
                 for (int i = 0; i < 4; i++) {
                     for (int j = 0; j < 4; j++) {
@@ -429,8 +440,11 @@ public class App {
                     }
                     ukaz = "";
                 } else {
-                    while (ukaz.equals("")) {
+                    while (ukaz.equals("") && !paused) {
                         Thread.sleep(50);
+                        System.out.println("test");
+                        okno.requestFocus();
+                        
                     }
                 }
                 razlicen = false;
@@ -478,6 +492,12 @@ public class App {
                 }
                 System.out.println();
                 System.out.println((razlicen ? "" : "Ni spremembe"));
+                System.out.println("Ukaz = " + ukaz);
+            }
+            else {
+                if (ukaz.equals("ends") || ukaz.equals("end")) {
+                    
+                }
             }
         }
     
@@ -506,5 +526,17 @@ public class App {
         shrani.dispose();
         okno.dispose();
         vnos.close();
+    }
+      
+}
+
+class MyKeyListener extends KeyAdapter {
+    public void keyPressed(KeyEvent evt) {
+        if (evt.getKeyChar() == 'a') {
+            System.out.println("Check for key characters: " + evt.getKeyChar());
+        }
+        if (evt.getKeyCode() == KeyEvent.VK_HOME) {
+            System.out.println("Check for key codes: " + evt.getKeyCode());
+        }
     }
 }
